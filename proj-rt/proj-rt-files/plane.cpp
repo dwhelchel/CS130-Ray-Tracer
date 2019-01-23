@@ -13,15 +13,16 @@ Hit Plane::Intersection(const Ray& ray, int part) const
 
     double denom = dot(ray.direction, normal);
 
-    if (abs(denom) > 0) {
-        double t = -1 * dot(ray.endpoint - x1, normal) / denom;
-        if (t >= small_t) {
-            intersected = {this, t, part};
-            return intersected;
-        }
+    if (denom == 0) {
+        return intersected;
     }
 
-    return intersected;
+    double t = -1 * dot(ray.endpoint - x1, normal) / denom;
+    if (t >= small_t) {
+        intersected = {this, t, part};
+        return intersected;
+    }
+
 }
 
 vec3 Plane::Normal(const vec3& point, int part) const
