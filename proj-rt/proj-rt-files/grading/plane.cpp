@@ -12,8 +12,9 @@ Hit Plane::Intersection(const Ray& ray, int part) const
     Hit intersected;
 
     double denom = dot(ray.direction, this->normal);
-    if (abs(denom) > 1e-6) {
-        double t = -1 * dot(ray.endpoint - this->x1, this->normal) / denom;
+    double t = -1 * dot(ray.endpoint - this->x1, this->normal) / denom;
+
+    if (abs(denom) > 1e-6 && t >= small_t) {
         intersected.object = this;
         intersected.dist = t;
         intersected.part = part;
