@@ -5,7 +5,7 @@
 Hit Sphere::Intersection(const Ray& ray, int part) const
 {
 
-    Hit intersected;
+    Hit intersected = {0, 0, 0};
 
     double a = dot(ray.direction, ray.direction);
     double b = 2 * dot(ray.direction, ray.endpoint - center);
@@ -14,22 +14,16 @@ Hit Sphere::Intersection(const Ray& ray, int part) const
     double t1 = (-b + discriminant) / 2*a;
     double t2 = (-b - discriminant) / 2*a;
 
-    if (discriminant >= 0 && t >= small_t) {
-        if (t1 > t2) {
-            intersected.object = this;
-            intersected.dist = t2;
-            intersected.part = part;
+    if (discriminant > 0) {
+        if (t1 < t2 && t1 >= small_t) {
+            intersected = {this, t1, part};
         }
-        else if (t1 < t2) {
-            intersected.object = this;
-            intersected.dist = t1;
-            intersected.part = part;
+        else if (t2 >= small_t){
+            intersected = {this, t2, part};
         }
     }
     else {
-        intersected.object = NULL;
-        intersected.dist = 0;
-        intersected.part = part;
+        intersected = {NULL, 0, part};
     }
 
     return intersected;
