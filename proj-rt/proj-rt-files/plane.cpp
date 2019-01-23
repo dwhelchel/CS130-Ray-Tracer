@@ -16,6 +16,7 @@ Hit Plane::Intersection(const Ray& ray, int part) const
 
     if (t >= small_t) {
         intersected = {this, t, part};
+        return intersected;
     }
 
     return intersected;

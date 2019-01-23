@@ -15,6 +15,7 @@ Hit Sphere::Intersection(const Ray& ray, int part) const
 
     if (discriminant >= 0 && t >= small_t) {
         intersected = {this, t, part};
+        return intersected;
     }
 
     return intersected;
