@@ -34,7 +34,7 @@ vec3 Sphere::Normal(const vec3& point, int part) const
     vec3 normal;
     TODO; // compute the normal direction
     vec3 numerator = point - center;
-    double denom = numerator.normalized();
+    double denom = numerator.magnitude();
     normal = numerator / denom;
     return normal;
 }
