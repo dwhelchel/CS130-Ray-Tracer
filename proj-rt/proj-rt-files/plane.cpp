@@ -23,6 +23,8 @@ Hit Plane::Intersection(const Ray& ray, int part) const
         return intersected;
     }
 
+    return intersected;
+
 }
 
 vec3 Plane::Normal(const vec3& point, int part) const
