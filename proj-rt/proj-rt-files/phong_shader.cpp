@@ -10,12 +10,12 @@ Shade_Surface(const Ray& ray,const vec3& intersection_point,
 {
     vec3 color;
     TODO; //determine the color
-    vec3 ambient_component =  dot(color_ambient, ambient_color) * ambient_intensity;
+    vec3 ambient_component = color_ambient * world_input.ambient_color * world_input.ambient_intensity;
     color += ambient_component;
-    for (unsigned int i = 0; i < lights.size(); ++i) {
+    for (unsigned int i = 0; i < world_input.lights.size(); ++i) {
         Light light = lights[i];
         Ray shadowRay;
-        shadowRay.endpoint = light.position;
+        shadowRay.endpoint = intersection_point;
         shadowRay.direction = light.position - intersection_point;
         // add if statement
 
