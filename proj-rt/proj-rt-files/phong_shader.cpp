@@ -11,14 +11,15 @@ Shade_Surface(const Ray& ray,const vec3& intersection_point,
     vec3 color;
     TODO; //determine the color
     vec3 ambient_component = color_ambient * world.ambient_color * world.ambient_intensity;
+    vec3 specular_component, diffuse_component;
     color += ambient_component;
-    // for (unsigned int i = 0; i < world.lights.size(); ++i) {
-    //     Light light = world.lights[i];
-    //     Ray shadowRay;
-    //     shadowRay.endpoint = intersection_point;
-    //     shadowRay.direction = (light.position - intersection_point).normalized();
-    //     // add if statement
-    //
-    // }
+    for (unsigned int i = 0; i < world.lights.size(); ++i) {
+        Ray shadowRay = Ray(world.lights[i].position, world.lights[i].position - intersection_point);
+        // do if statement here
+        diffuse_component = color_diffuse * world.lights[i].Emitted_Light() * max(dot(normal, shadowRay), 0);
+        // specular_component = color_specular * world.lights[i].Emitted_Light() * max(, 0);
+        color += diffuse_component;
+        color += specular_component;
+    }
     return color;
 }
