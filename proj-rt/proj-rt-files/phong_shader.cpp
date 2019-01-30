@@ -19,7 +19,7 @@ Shade_Surface(const Ray& ray,const vec3& intersection_point,
         shadowRay.direction = (world.lights[i]->position - intersection_point).normalized();
         vec3 lightDirection = world.lights[i]->position - intersection_point;
         // do if statement here
-        diffuse_component = color_diffuse * world.lights[i]->Emitted_Light(lightDirection) * max(dot(normal, lightDirection), 0.0);
+        diffuse_component = color_diffuse * world.lights[i]->Emitted_Light(lightDirection) * std::max(dot(normal, lightDirection), 0.0);
         // specular_component = color_specular * world.lights[i]->Emitted_Light() * max(, 0);
         color += diffuse_component;
         color += specular_component;
