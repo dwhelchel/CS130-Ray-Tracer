@@ -18,10 +18,12 @@ Shade_Surface(const Ray& ray,const vec3& intersection_point,
         vec3 view = ray.endpoint - intersection_point;
         vec3 rDir = 2*dot(lDir, normal)*normal - lDir;
         // do if statement here
-        diffuse_component = color_diffuse * l->Emitted_Light(lDir) * std::max(dot(normal, shadowRay.direction), 0.0);
-        specular_component = color_specular * l->Emitted_Light(lDir) * std::pow(std::max(dot(view.normalized(), rDir.normalized()), 0.0), specular_power);
-        color += diffuse_component;
-        color += specular_component;
+        if (!world.Closest_Intersection(shadowRay)) {
+            diffuse_component = color_diffuse * l->Emitted_Light(lDir) * std::max(dot(normal, shadowRay.direction), 0.0);
+            specular_component = color_specular * l->Emitted_Light(lDir) * std::pow(std::max(dot(view.normalized(), rDir.normalized()), 0.0), specular_power);
+            color += diffuse_component;
+            color += specular_component;
+        }
     }
     return color;
 }
