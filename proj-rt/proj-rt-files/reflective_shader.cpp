@@ -8,8 +8,8 @@ Shade_Surface(const Ray& ray,const vec3& intersection_point,
 {
     vec3 color;
     TODO; // determine the color
-    vec3 view = ray.endpoint - intersection_point;
+    // vec3 view = ray.endpoint - intersection_point;
 
-    color = (1-reflectivity)*color+reflectivity*world.Cast_Ray(reflected_ray, recursion_depth);
+    // color = (1-reflectivity)*color+reflectivity*world.Cast_Ray(reflected_ray, recursion_depth);
     return color;
 }
