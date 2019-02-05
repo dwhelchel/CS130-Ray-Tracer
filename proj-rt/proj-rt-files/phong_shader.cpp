@@ -17,7 +17,7 @@ Shade_Surface(const Ray& ray,const vec3& intersection_point,
         vec3 lDir = l->position - intersection_point;
         vec3 view = ray.endpoint - intersection_point;
         vec3 rDir = 2*dot(lDir, normal)*normal - lDir;
-        double maxDist = (l->position - intersectionPoint).magnitude();
+        double maxDist = (l->position - intersection_point).magnitude();
         // do if statement here
         if (world.Closest_Intersection(shadowRay).object == NULL || world.Closest_Intersection(shadowRay).dist > maxDist) {
             diffuse_component = color_diffuse * l->Emitted_Light(lDir) * std::max(dot(normal, shadowRay.direction), 0.0);
