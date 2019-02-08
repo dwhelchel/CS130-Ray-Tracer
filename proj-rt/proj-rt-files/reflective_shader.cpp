@@ -14,10 +14,10 @@ Shade_Surface(const Ray& ray,const vec3& intersection_point,
     vec3 rDir = 2*dot(vDir, normal)*normal - vDir;
     reflection_ray = {intersection_point, rDir};
 
-    vec3 rColor = world.Cast_Ray(reflection_ray, recursion_depth);
+    //vec3 rColor = world.Cast_Ray(reflection_ray, recursion_depth+1);                      ERROR HERE
     vec3 sColor = shader->Shade_Surface(ray, intersection_point, normal, recursion_depth);
 
-    color = (1-reflectivity) * sColor + reflectivity * rColor;
+    //color = (1-reflectivity) * sColor + reflectivity * rColor;
 
     return color;
 }
