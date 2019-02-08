@@ -11,7 +11,7 @@ Shade_Surface(const Ray& ray,const vec3& intersection_point,
 
     Ray reflection_ray;
     vec3 vDir = ray.endpoint - intersection_point;
-    vec3 rDir = 2*dot(rDir, normal)*normal - rDir;
+    vec3 rDir = 2*dot(vDir, normal)*normal - vDir;
     reflection_ray = {intersection_point, rDir};
 
     vec3 rColor = world.Cast_Ray(reflection_ray, recursion_depth);
