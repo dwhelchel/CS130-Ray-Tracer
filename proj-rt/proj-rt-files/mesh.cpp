@@ -91,31 +91,33 @@ vec3 Mesh::Normal(const vec3& point, int part) const
 bool Mesh::Intersect_Triangle(const Ray& ray, int tri, double& dist) const
 {
     TODO;
+    // Vertices
     vec3 vertA = vertices[triangles[tri][0]];
     vec3 vertB = vertices[triangles[tri][1]];
     vec3 vertC = vertices[triangles[tri][2]];
+
+    // Normal
     vec3 norm = Normal(vertA, tri);
 
+    // Norm and hit
     Plane triPlane(vertA, norm);
     Hit planeHit = triPlane.Intersection(ray, tri);
+
     if (planeHit.object == NULL || planeHit.dist < small_t) {
         return false;
     }
 
+    // Barycentric setup
     vec3 point = ray.Point(planeHit.dist);
-    vec3 vertBA = vertB - vertA;
-    vec3 vertCA = vertC - vertA;
-    double triArea = 1/2 * cross(vertBA, vertCA).magnitude();
-    vec3 lineCP = vertC - point;
-    vec3 lineBP = vertB - point;
-    vec3 lineAP = vertA - point;
-    double pbcArea = 1/2 * cross(lineBP, lineCP).magnitude();
-    double pcaArea = 1/2 * cross(lineAP, lineCP).magnitude();
-    double pabArea = 1/2 * cross(lineAP, lineBP).magnitude();
+    vec3 vecBA = vertB - vertA;
+    vec3 vecCA = vertC - vertA;
+    vec3 linePA = point - vertA;
+    vec3 direction = ray.direction;
 
-    double alpha = pbcArea / triArea;
-    double beta = pcaArea / triArea;
-    double gamma = pabArea / triArea;
+    // Barycentric computation
+    double gamma = dot(cross(direction, vecBA), linePA) / dot(cross(direction, vecBA), vecCA);
+    double beta = dot(cross(vecCA, direction), linePA) / dot(cross(vecCA, direction), vecBA);
+    double alpha = 1 - gamma - beta;
 
     if (gamma >= -weight_tolerance && beta >= -weight_tolerance && alpha >= -weight_tolerance) {
         dist = planeHit.dist;
