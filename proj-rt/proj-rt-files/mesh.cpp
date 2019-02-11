@@ -43,7 +43,6 @@ void Mesh::Read_Obj(const char* file)
 // Check for an intersection against the ray.  See the base class for details.
 Hit Mesh::Intersection(const Ray& ray, int part) const
 {
-    TODO;
     double distance = 0.0;
 
     if (part >= 0) {
@@ -59,14 +58,13 @@ Hit Mesh::Intersection(const Ray& ray, int part) const
         }
     }
 
-    return {0, 0, 0};
+    return {NULL, 0, 0};
 }
 
 // Compute the normal direction for the triangle with index part.
 vec3 Mesh::Normal(const vec3& point, int part) const
 {
     assert(part>=0);
-    TODO;
     vec3 vertA = vertices[triangles[part][0]];
     vec3 vertB = vertices[triangles[part][1]];
     vec3 vertC = vertices[triangles[part][2]];
@@ -90,7 +88,6 @@ vec3 Mesh::Normal(const vec3& point, int part) const
 // two triangles.
 bool Mesh::Intersect_Triangle(const Ray& ray, int tri, double& dist) const
 {
-    TODO;
     // Vertices
     vec3 vertA = vertices[triangles[tri][0]];
     vec3 vertB = vertices[triangles[tri][1]];
