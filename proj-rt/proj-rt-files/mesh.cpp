@@ -44,7 +44,8 @@ void Mesh::Read_Obj(const char* file)
 Hit Mesh::Intersection(const Ray& ray, int part) const
 {
     TODO;
-    double distance = 0.0;
+    double distance;
+    int i = 0;
 
     if (part >= 0) {
         if (Intersect_Triangle(ray, part, distance)) {
@@ -52,12 +53,15 @@ Hit Mesh::Intersection(const Ray& ray, int part) const
         }
     }
     else {
-        for (int i = 0; i < triangles.size(); ++i) {
-            if (Intersect_Triangle(ray, i, distance) && i != triangles.size()) {
-                return {this, distance, i};
-            }
+        while (i < triangles.size() && !Intersect_Triangle(ray, i, distance)) {
+            i++;
+        }
+        if (i != triangles.size()) {
+            return {this, distance, i};
         }
     }
+
+
 
     return {0, 0, 0};
 }
@@ -66,14 +70,13 @@ Hit Mesh::Intersection(const Ray& ray, int part) const
 vec3 Mesh::Normal(const vec3& point, int part) const
 {
     assert(part>=0);
-    TODO;
-    vec3 vertA = vertices[triangles[part][0]];
-    vec3 vertB = vertices[triangles[part][1]];
-    vec3 vertC = vertices[triangles[part][2]];
-    vec3 vecAB = vertB - vertA;
-    vec3 vecAC = vertC - vertA;
-    vec3 crossed = cross(vecAB, vecAC).normalized();
-    return crossed;
+    //TODO;
+    vec3 vertex1 = vertices.at(triangles[part][0]);
+    vec3 vertex2 = vertices.at(triangles[part][1]);
+    vec3 vertex3 = vertices.at(triangles[part][2]);
+
+
+    return cross(vertex1 - vertex2, vertex2 - vertex3).normalized();
 }
 
 // This is a helper routine whose purpose is to simplify the implementation
