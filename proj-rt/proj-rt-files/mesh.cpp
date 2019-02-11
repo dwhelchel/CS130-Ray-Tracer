@@ -102,13 +102,13 @@ bool Mesh::Intersect_Triangle(const Ray& ray, int tri, double& dist) const
     }
 
     vec3 point = ray.Point(triPlane.dist);
-    vec3 triArea = 1/2 * cross(vertBA, vertCA);
+    vec3 triArea = 1/2 * cross(vertBA, vertCA).magnitude();
     vec3 lineCP = vertC - point;
     vec3 lineBP = vertB - point;
     vec3 lineAP = vertA - point;
-    vec3 pbcArea = 1/2 * cross(lineBP, lineCP);
-    vec3 pbcArea = 1/2 * cross(lineAP, lineCP);
-    vec3 pabArea = 1/2 * corss(lineAP, lineBP);
+    vec3 pbcArea = 1/2 * cross(lineBP, lineCP).magnitude();
+    vec3 pcaArea = 1/2 * cross(lineAP, lineCP).magnitude();
+    vec3 pabArea = 1/2 * corss(lineAP, lineBP).magnitude();
 
     double alpha = pbcArea / triArea;
     double beta = pcaArea / triArea;
