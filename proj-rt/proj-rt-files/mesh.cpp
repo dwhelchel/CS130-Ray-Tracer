@@ -44,8 +44,7 @@ void Mesh::Read_Obj(const char* file)
 Hit Mesh::Intersection(const Ray& ray, int part) const
 {
     TODO;
-    double distance;
-    int i = 0;
+    double distance = 0.0;
 
     if (part >= 0) {
         if (Intersect_Triangle(ray, part, distance)) {
@@ -53,15 +52,12 @@ Hit Mesh::Intersection(const Ray& ray, int part) const
         }
     }
     else {
-        while (i < triangles.size() && !Intersect_Triangle(ray, i, distance)) {
-            i++;
-        }
-        if (i != triangles.size()) {
-            return {this, distance, i};
+        for (int i = 0; i < triangles.size(); ++i) {
+            if (Intersect_Triangle(ray, i, distance) && i != triangles.size()) {
+                return {this, distance, i};
+            }
         }
     }
-
-
 
     return {0, 0, 0};
 }
@@ -70,13 +66,14 @@ Hit Mesh::Intersection(const Ray& ray, int part) const
 vec3 Mesh::Normal(const vec3& point, int part) const
 {
     assert(part>=0);
-    //TODO;
-    vec3 vertex1 = vertices.at(triangles[part][0]);
-    vec3 vertex2 = vertices.at(triangles[part][1]);
-    vec3 vertex3 = vertices.at(triangles[part][2]);
-
-
-    return cross(vertex1 - vertex2, vertex2 - vertex3).normalized();
+    TODO;
+    vec3 vertA = vertices[triangles[part][0]];
+    vec3 vertB = vertices[triangles[part][1]];
+    vec3 vertC = vertices[triangles[part][2]];
+    vec3 vecAB = vertB - vertA;
+    vec3 vecAC = vertC - vertA;
+    vec3 crossed = cross(vecAB, vecAC).normalized();
+    return crossed;
 }
 
 // This is a helper routine whose purpose is to simplify the implementation
@@ -94,28 +91,36 @@ vec3 Mesh::Normal(const vec3& point, int part) const
 bool Mesh::Intersect_Triangle(const Ray& ray, int tri, double& dist) const
 {
     TODO;
-    vec3 v1 = vertices.at(triangles[tri][0]);
-    vec3 v2 = vertices.at(triangles[tri][1]);
-    vec3 v3 = vertices.at(triangles[tri][2]);
+    // Vertices
+    vec3 vertA = vertices[triangles[tri][0]];
+    vec3 vertB = vertices[triangles[tri][1]];
+    vec3 vertC = vertices[triangles[tri][2]];
 
-    Plane tri_plane(v1, Normal(v1, tri));
-    Hit tri_intersection = tri_plane.Intersection(ray, tri);
-    if (!tri_intersection.object || tri_intersection.dist <= small_t) {
+    // Normal
+    vec3 norm = Normal(vertA, tri);
+
+    // Norm and hit
+    Plane triPlane(vertA, norm);
+    Hit planeHit = triPlane.Intersection(ray, tri);
+
+    if (planeHit.object == NULL || planeHit.dist < small_t) {
         return false;
     }
 
-    vec3 p = ray.Point(tri_intersection.dist);
-    vec3 v = v2 - v1;
-    vec3 w = v3 - v1;
-    vec3 x = p - v1;
-    vec3 u = ray.direction;
+    // Barycentric setup
+    vec3 point = ray.Point(planeHit.dist);
+    vec3 vecBA = vertB - vertA;
+    vec3 vecCA = vertC - vertA;
+    vec3 linePA = point - vertA;
+    vec3 direction = ray.direction;
 
-    double gamma = dot(cross(u, v), x)/dot(cross(u, v), w);
-    double beta = dot(cross(w, u), x)/dot(cross(w, u), v);
-    double alpha = 1 - beta - gamma;
+    // Barycentric computation
+    double gamma = dot(cross(direction, vecBA), linePA) / dot(cross(direction, vecBA), vecCA);
+    double beta = dot(cross(vecCA, direction), linePA) / dot(cross(vecCA, direction), vecBA);
+    double alpha = 1 - gamma - beta;
 
-    if (alpha >= -weight_tolerance && beta >= -weight_tolerance && gamma >= -weight_tolerance) {
-        dist = tri_intersection.dist;
+    if (gamma >= -weight_tolerance && beta >= -weight_tolerance && alpha >= -weight_tolerance) {
+        dist = planeHit.dist;
         return true;
     }
 
