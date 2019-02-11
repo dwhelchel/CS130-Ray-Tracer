@@ -98,13 +98,13 @@ bool Mesh::Intersect_Triangle(const Ray& ray, int tri, double& dist) const
 
     Plane triPlane(vertA, norm);
     Hit planeHit = triPlane.Intersection(ray, tri);
-    if (planeHit.Object == NULL || planeHit.dist < small_t) {
+    if (planeHit.object == NULL || planeHit.dist < small_t) {
         return false;
     }
 
     vec3 point = ray.Point(planeHit.dist);
     vec3 vertBA = vertB - vertA;
-    vec3 vertBA = vertC - vertA;
+    vec3 vertCA = vertC - vertA;
     vec3 triArea = 1/2 * cross(vertBA, vertCA).magnitude();
     vec3 lineCP = vertC - point;
     vec3 lineBP = vertB - point;
