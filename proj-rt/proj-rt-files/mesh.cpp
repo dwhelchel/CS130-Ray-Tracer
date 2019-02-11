@@ -107,32 +107,17 @@ bool Mesh::Intersect_Triangle(const Ray& ray, int tri, double& dist) const
         return false;
     }
 
-    // // Barycentric setup
-    // vec3 point = ray.Point(planeHit.dist);
-    // vec3 vecBA = vertB - vertA;
-    // vec3 vecCA = vertC - vertA;
-    // vec3 linePA = point - vertA;
-    // vec3 direction = ray.direction;
-    //
-    // // Barycentric computation
-    // double gamma = dot(cross(direction, vecBA), linePA) / dot(cross(direction, vecBA), vecCA);
-    // double beta = dot(cross(vecCA, direction), linePA) / dot(cross(vecCA, direction), vecBA);
-    // double alpha = 1 - gamma - beta;
-
-    vec3 vertBA = vertB - vertA;
-    vec3 vertCA = vertC - vertA;
+    // Barycentric setup
     vec3 point = ray.Point(planeHit.dist);
+    vec3 vecBA = vertB - vertA;
+    vec3 vecCA = vertC - vertA;
     vec3 linePA = point - vertA;
-    vec3 linePB = point - vertB;
-    vec3 linePC = point - vertC;
-    double triArea = 1/2 * cross(vertBA, vertCA).magnitude();
-    double pbcArea = 1/2 * cross(linePB, linePC).magnitude();
-    double pcaArea = 1/2 * cross(linePC, linePA).magnitude();
-    double pabArea = 1/2 * cross(linePA, linePB).magnitude();
+    vec3 direction = ray.direction;
 
-    double alpha = pbcArea / triArea;
-    double beta = pcaArea / triArea;
-    double gamma = pabArea / triArea;
+    // Barycentric computation
+    double gamma = dot(cross(direction, vecBA), linePA) / dot(cross(direction, vecBA), vecCA);
+    double beta = dot(cross(vecCA, direction), linePA) / dot(cross(vecCA, direction), vecBA);
+    double alpha = 1 - gamma - beta;
 
     if (gamma >= -weight_tolerance && beta >= -weight_tolerance && alpha >= -weight_tolerance) {
         dist = planeHit.dist;
