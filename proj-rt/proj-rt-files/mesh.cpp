@@ -1,4 +1,5 @@
 #include "mesh.h"
+#include "plane.h"
 #include <fstream>
 #include <string>
 #include <limits>
@@ -93,10 +94,10 @@ bool Mesh::Intersect_Triangle(const Ray& ray, int tri, double& dist) const
     vec3 vertA = vertices[triangles[tri][0]];
     vec3 vertB = vertices[triangles[tri][1]];
     vec3 vertC = vertices[triangles[tri][2]];
-    vec3 norm = Normal(v1, tri);
+    vec3 norm = Normal(vertA, tri);
 
-    Plane triPlane(v1, norm);
-    Hit planeHit = triPlane.Intersection(ray, part);
+    Plane triPlane(vertA, norm);
+    Hit planeHit = triPlane.Intersection(ray, tri);
     if (planeHit.obj == NULL || planeHit.dist < small_t) {
         return false;
     }
